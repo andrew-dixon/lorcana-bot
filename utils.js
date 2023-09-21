@@ -51,12 +51,34 @@ export async function InstallGlobalCommands(appId, commands) {
   }
 }
 
-// Simple method that returns a random emoji from list
-export function getRandomEmoji() {
-  const emojiList = ['😭','😄','😌','🤓','😎','😤','🤖','😶‍🌫️','🌏','📸','💿','👋','🌊','✨'];
-  return emojiList[Math.floor(Math.random() * emojiList.length)];
+export function name_convert( str ) {
+  let regex_hypen = /-/ig;
+  let regex_underscore = /_/ig;
+  let text = str.replace(regex_hypen, ' - ').replace(regex_underscore, ' ');
+  let words = text.split(" ");
+  for (let i = 0; i < words.length; i++) {
+      words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+  }
+  return words.join(" ");
 }
 
-export function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+export function generate_card_embed( card ) {
+  return {
+      "title": card.name + ( card.subtitle ? ' - ' + card.subtitle : '' ),
+      "description": card['body-text']
+        + '\n' + ( card['flavor-text'] != undefined ? card['flavor-text'] + '\n' : '' )
+        + '\n**Type:** ' + card['type']
+        + '\n**Colour:** ' + card['color']
+        + '\n**Ink Cost:** ' + card['ink-cost']
+        + '\n**Rarity:** ' + card['rarity']
+        + '\n**Inkable:** ' + card['inkable']
+        + '\n**Lore:** ' + ( card['lore-value'] ? card['lore-value'] : 'None' )
+        + '\n**Card Number:** ' + card['card-number']
+        + '\n**Strength / Willpower:** ' + ( card['strength'] ? card['strength'] : 'None' ) + ' / ' + ( card['willpower'] ? card['willpower'] : 'None' )
+        + '\n**Artist:** ' + card['artist']
+        ,
+      "image": {
+        "url": card['image-urls'].medium
+      }
+    }
 }
